@@ -1,4 +1,4 @@
-import { Component, useState } from 'react';
+import { Component } from 'react';
 
 import AppInfo from '../app-info/app-info';
 import SearchPanel from '../search-panel/search-panel';
@@ -9,39 +9,52 @@ import EmployeesAddForm from '../employees-add-form/employees-add-form';
 import './app.css';
 
 
-class App extends Component{
-    constructor(props){
+class App extends Component {
+    constructor(props) {
         super(props);
         this.state = {
             data: [
-                {name: 'Lenox', salary: 300, increase: false, id: 1},
-                {name: 'Mark', salary: 900, increase: true, id: 2},
-                {name: 'Ginny', salary: 1500, increase: true, id: 3}
+                { name: 'Lenox', salary: 300, increase: false, id: 1 },
+                { name: 'Mark', salary: 900, increase: true, id: 2 },
+                { name: 'Ginny', salary: 1500, increase: true, id: 3 }
             ]
         }
     }
-    
+    addUser = (name, salary) => {
+        const randomId = `f${(~~(Math.random() * 1e8)).toString(16)}`;
+        const newItem = {
+            name,
+            salary,
+            increase: false,
+            id: randomId
+        }
+        this.setState(({ data }) => {
+            const newArr = [...data, newItem];
+            return {
+                data: newArr
+            }
+        })
+    }
     deleteItem = (id) => {
-        this.setState(({data}) => {
+        this.setState(({ data }) => {
             return {
                 data: data.filter(item => item.id !== id)
             }
         })
     }
-    
+
     render() {
-        return(
+        return (
             <div className="app">
-                <AppInfo/>
-    
+                <AppInfo />
                 <div className="search-panel">
-                    <SearchPanel/>
-                    <AppFilter/>
+                    <SearchPanel />
+                    <AppFilter />
                 </div>
-                <EmploeesList 
-                data = {this.state.data}
-                onDelete={this.deleteItem}/>
-                <EmployeesAddForm/>   
+                <EmploeesList
+                    data={this.state.data}
+                    onDelete={this.deleteItem} />
+                <EmployeesAddForm addUser={this.addUser} />
             </div>
         )
     }
